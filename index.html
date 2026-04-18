@@ -19,26 +19,21 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; min-height: 100vh; }
 
-  /* Header */
   header { background: var(--card); border-bottom: 1px solid var(--border); padding: 12px 16px; display: flex; align-items: center; gap: 10px; position: sticky; top: 0; z-index: 10; }
   header h1 { font-size: 18px; font-weight: 700; }
   header span { font-size: 22px; }
   .version { font-size: 11px; color: var(--muted); margin-left: auto; }
 
-  /* Tabs */
   .tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); overflow-x: auto; }
   .tab { flex: 1; padding: 12px 8px; text-align: center; font-size: 13px; font-weight: 500; cursor: pointer; border-bottom: 2px solid transparent; color: var(--muted); white-space: nowrap; transition: all .2s; min-width: 80px; }
   .tab.active { color: var(--green); border-bottom-color: var(--green); }
 
-  /* Pages */
   .page { display: none; padding: 16px; max-width: 600px; margin: 0 auto; }
   .page.active { display: block; }
 
-  /* Cards */
   .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
   .card h3 { font-size: 14px; color: var(--muted); margin-bottom: 12px; text-transform: uppercase; letter-spacing: .05em; }
 
-  /* Form */
   label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 4px; margin-top: 12px; }
   label:first-child { margin-top: 0; }
   input, textarea, select {
@@ -48,7 +43,6 @@
   input:focus, textarea:focus, select:focus { border-color: var(--green); }
   textarea { resize: vertical; min-height: 80px; }
 
-  /* Buttons */
   .btn { display: block; width: 100%; padding: 13px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; transition: all .2s; text-align: center; }
   .btn-green { background: var(--green); color: #0f172a; }
   .btn-green:hover { filter: brightness(1.1); }
@@ -56,20 +50,17 @@
   .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); font-size: 13px; padding: 8px 14px; display: inline-block; width: auto; }
   .btn-red { background: #450a0a; color: #fca5a5; font-size: 13px; padding: 8px 14px; display: inline-block; width: auto; }
 
-  /* Score badge */
   .score-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 16px; }
   .score-hot { background: #14532d; color: var(--green); }
   .score-ok { background: #431407; color: var(--orange); }
   .score-pass { background: #450a0a; color: var(--red); }
 
-  /* Decision banner */
   .decision { border-radius: 10px; padding: 12px 16px; margin-bottom: 12px; font-size: 15px; font-weight: 600; }
   .decision-buy { background: #14532d; color: #86efac; border: 1px solid #16a34a; }
   .decision-neg { background: #431407; color: #fdba74; border: 1px solid #ea580c; }
   .decision-ins { background: #1e3a5f; color: #93c5fd; border: 1px solid #2563eb; }
   .decision-pass { background: #450a0a; color: #fca5a5; border: 1px solid #dc2626; }
 
-  /* Result sections */
   .result-item { display: flex; justify-content: space-between; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px; gap: 12px; }
   .result-item:last-child { border-bottom: none; }
   .result-label { color: var(--muted); flex-shrink: 0; }
@@ -78,14 +69,19 @@
   .result-value.warning { color: var(--orange); }
   .result-value.danger { color: var(--red); }
 
-  /* Analysis text */
   .analysis-text { font-size: 13px; line-height: 1.6; color: #cbd5e1; }
 
   /* Tracker items */
-  .tracker-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-bottom: 8px; }
+  .tracker-item {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px; margin-bottom: 8px; cursor: pointer; transition: border-color .2s;
+  }
+  .tracker-item:hover { border-color: var(--green); }
   .tracker-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
   .tracker-title { font-size: 14px; font-weight: 600; flex: 1; margin-right: 8px; }
   .tracker-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+  .tracker-contact { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); display: flex; gap: 12px; flex-wrap: wrap; }
+  .tracker-contact a { color: var(--blue); text-decoration: none; }
   .tag { padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: 500; }
   .tag-hot { background: #14532d; color: var(--green); }
   .tag-ok { background: #431407; color: var(--orange); }
@@ -105,33 +101,66 @@
   .price-green { color: var(--green); font-weight: 600; }
   .price-orange { color: var(--orange); font-weight: 600; }
 
-  /* API key section */
   .api-info { background: #1e3a5f; border: 1px solid #2563eb; border-radius: 10px; padding: 12px; margin-bottom: 16px; font-size: 13px; color: #93c5fd; line-height: 1.5; }
   .api-info a { color: #60a5fa; }
 
-  /* Loading */
   .loading { text-align: center; padding: 20px; color: var(--muted); }
   .spinner { width: 30px; height: 30px; border: 3px solid var(--border); border-top-color: var(--green); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 10px; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* Empty state */
   .empty { text-align: center; padding: 40px 20px; color: var(--muted); }
   .empty-icon { font-size: 40px; margin-bottom: 10px; }
 
-  /* Filter buttons */
   .filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
   .filter-btn { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--muted); }
   .filter-btn.active { background: var(--green); color: #0f172a; border-color: var(--green); }
 
-  /* Tips */
   .tip { background: #1c1917; border-left: 3px solid var(--orange); padding: 10px 12px; border-radius: 0 8px 8px 0; margin-bottom: 10px; font-size: 13px; color: #d6d3d1; line-height: 1.5; }
   .tip strong { color: var(--orange); }
 
-  /* Settings */
   .key-status { display: flex; align-items: center; gap: 6px; font-size: 13px; margin-top: 8px; }
   .dot { width: 8px; height: 8px; border-radius: 50%; }
   .dot-green { background: var(--green); }
   .dot-red { background: var(--red); }
+
+  /* Section separator */
+  .section-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--muted); margin: 16px 0 8px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,.75);
+    z-index: 100; overflow-y: auto; padding: 16px;
+  }
+  .modal-overlay.open { display: block; }
+  .modal {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 14px;
+    max-width: 560px; margin: 0 auto; overflow: hidden;
+  }
+  .modal-header {
+    background: var(--card); padding: 14px 16px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid var(--border); position: sticky; top: 0;
+  }
+  .modal-header h2 { font-size: 15px; font-weight: 700; flex: 1; margin-right: 10px; }
+  .modal-close {
+    background: var(--border); border: none; color: var(--text);
+    width: 28px; height: 28px; border-radius: 50%; font-size: 16px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .modal-body { padding: 16px; }
+  .modal-actions { display: flex; gap: 8px; padding: 0 16px 16px; }
+
+  /* Contact card inside modal */
+  .contact-block { background: #1e3a5f; border: 1px solid #2563eb; border-radius: 10px; padding: 12px; margin-bottom: 12px; }
+  .contact-block h3 { font-size: 13px; color: #93c5fd; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+  .contact-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 13px; border-bottom: 1px solid #2563eb33; }
+  .contact-row:last-child { border-bottom: none; }
+  .contact-row a { color: #60a5fa; text-decoration: none; word-break: break-all; }
+  .contact-row span:first-child { color: #93c5fd; flex-shrink: 0; margin-right: 8px; }
 </style>
 </head>
 <body>
@@ -143,16 +172,16 @@
 </header>
 
 <div class="tabs">
-  <div class="tab active" onclick="showPage('scanner')">🔍 Scanner</div>
-  <div class="tab" onclick="showPage('tracker')">📋 Tracker</div>
-  <div class="tab" onclick="showPage('marche')">💰 Marché</div>
-  <div class="tab" onclick="showPage('config')">⚙️ Config</div>
+  <div class="tab active" onclick="showPage('scanner', event)">🔍 Scanner</div>
+  <div class="tab" onclick="showPage('tracker', event)">📋 Tracker</div>
+  <div class="tab" onclick="showPage('marche', event)">💰 Marché</div>
+  <div class="tab" onclick="showPage('config', event)">⚙️ Config</div>
 </div>
 
 <!-- SCANNER -->
 <div id="page-scanner" class="page active">
   <div class="tip">
-    <strong>Astuce :</strong> Cherche sur Leboncoin avec "ne démarre plus", "en panne", "pour pièces", "à réparer". Les meilleures affaires sont dans ces annonces !
+    <strong>Astuce :</strong> Cherche sur Leboncoin avec "ne démarre plus", "en panne", "pour pièces", "à réparer". Les meilleures affaires sont là !
   </div>
 
   <div class="card">
@@ -186,6 +215,25 @@
     <input id="annee" type="number" placeholder="ex: 2018">
   </div>
 
+  <div class="card">
+    <h3>Contact vendeur</h3>
+    <div class="tip" style="margin-bottom:0;">
+      <strong>Important :</strong> Note les coordonnées maintenant — les annonces disparaissent vite !
+    </div>
+
+    <label>Nom / Pseudo du vendeur</label>
+    <input id="vendeur_nom" type="text" placeholder="ex: Jean-Pierre, Ferme Dupont...">
+
+    <label>Téléphone</label>
+    <input id="vendeur_tel" type="tel" placeholder="ex: 06 12 34 56 78">
+
+    <label>Lien de l'annonce (URL Leboncoin)</label>
+    <input id="vendeur_url" type="url" placeholder="https://www.leboncoin.fr/...">
+
+    <label>Ville / Localisation</label>
+    <input id="vendeur_ville" type="text" placeholder="ex: Lyon 69, à 45 km...">
+  </div>
+
   <button class="btn btn-green" id="btn-analyse" onclick="analyser()">🤖 Analyser cette annonce</button>
 
   <div id="result-zone" style="display:none; margin-top:16px;">
@@ -199,7 +247,7 @@
 
 <!-- TRACKER -->
 <div id="page-tracker" class="page">
-  <div class="stats-grid" id="stats-zone">
+  <div class="stats-grid">
     <div class="stat-card"><div class="stat-value" id="stat-total">0</div><div class="stat-label">Annonces analysées</div></div>
     <div class="stat-card"><div class="stat-value" id="stat-pepites">0</div><div class="stat-label">Pépites 🔥 (score ≥70)</div></div>
     <div class="stat-card"><div class="stat-value" id="stat-marge">0€</div><div class="stat-label">Marge cumulée estimée</div></div>
@@ -306,7 +354,7 @@
     2. Crée un compte gratuit<br>
     3. "API Keys" → "Create Key"<br>
     4. Colle la clé ci-dessous<br><br>
-    <em>Ta clé est stockée uniquement sur ton téléphone (localStorage), elle ne transite jamais par un serveur.</em>
+    <em>Ta clé est stockée uniquement sur ton téléphone, elle ne transite jamais par un serveur.</em>
   </div>
 
   <div class="card">
@@ -334,18 +382,33 @@
     <p style="font-size:13px; color:var(--muted); line-height:1.6;">
       MotoVeille aide à identifier les bonnes affaires en motoculture sur Leboncoin.<br><br>
       Conçu pour des mécaniciens qui remettent en état et revendent le matériel.<br><br>
-      <em>Version 1.0 — Made with ❤️ pour les pros de la motoculture</em>
+      <em>Version 1.1 — Made with ❤️ pour les pros de la motoculture</em>
     </p>
+  </div>
+</div>
+
+<!-- MODAL DETAIL -->
+<div id="modal-overlay" class="modal-overlay" onclick="fermerModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h2 id="modal-title">Détail de l'annonce</h2>
+      <button class="modal-close" onclick="fermerModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-actions">
+      <button class="btn btn-red" id="modal-delete-btn" onclick="supprimerDepuisModal()">🗑️ Supprimer</button>
+      <button class="btn btn-outline" style="flex:1" onclick="fermerModal()">Fermer</button>
+    </div>
   </div>
 </div>
 
 <script>
 // ============ NAVIGATION ============
-function showPage(id) {
+function showPage(id, e) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
-  event.target.classList.add('active');
+  if (e && e.target) e.target.classList.add('active');
   if (id === 'tracker') renderTracker();
   if (id === 'config') initConfig();
 }
@@ -388,6 +451,10 @@ function sauvegarderAnnonce(a) {
   annonces.unshift(a);
   localStorage.setItem('mv_annonces', JSON.stringify(annonces.slice(0, 200)));
 }
+function supprimerAnnonce(id) {
+  const annonces = getAnnonces().filter(a => a.id !== id);
+  localStorage.setItem('mv_annonces', JSON.stringify(annonces));
+}
 function effacerDonnees() {
   if (confirm('Effacer tout le tracker ? Cette action est irréversible.')) {
     localStorage.removeItem('mv_annonces');
@@ -411,6 +478,10 @@ async function analyser() {
   const description = document.getElementById('description').value.trim();
   const marque = document.getElementById('marque').value.trim();
   const annee = document.getElementById('annee').value.trim();
+  const vendeur_nom = document.getElementById('vendeur_nom').value.trim();
+  const vendeur_tel = document.getElementById('vendeur_tel').value.trim();
+  const vendeur_url = document.getElementById('vendeur_url').value.trim();
+  const vendeur_ville = document.getElementById('vendeur_ville').value.trim();
 
   if (!titre || !prix) { alert('Remplis au moins le titre et le prix.'); return; }
 
@@ -457,7 +528,7 @@ Réponds en JSON strictement dans ce format (sans markdown, sans backticks) :
   "cout_pieces_max": <nombre en euros>,
   "temps_reparation_h": <nombre d'heures estimé>,
   "prix_revente_estime": <nombre en euros>,
-  "marge_estimee": <nombre en euros (prix revente - prix achat - coût pièces)>,
+  "marge_estimee": <nombre en euros (prix revente - prix achat - coût pièces moyen)>,
   "points_positifs": ["<point 1>", "<point 2>"],
   "points_vigilance": ["<point 1>", "<point 2>"],
   "conseil": "<conseil pratique en 2-3 phrases pour cette annonce spécifique>"
@@ -492,24 +563,31 @@ Critères de score:
 
     const data = await response.json();
     let raw = data.content[0].text.trim();
-    // Strip markdown code blocks if present (```json ... ``` or ``` ... ```)
     raw = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
-    const json = JSON.parse(raw);
+    const ai = JSON.parse(raw);
 
     loading.style.display = 'none';
-    afficherResultat(json, titre, prix, categorie);
+    afficherResultat(ai, titre, prix, categorie);
 
-    // Sauvegarder dans tracker
-    sauvegarderAnnonce({
+    const annonce = {
       id: Date.now(),
       titre, prix, categorie, marque, annee,
-      score: json.score,
-      decision: json.decision,
-      marge: json.marge_estimee,
-      prix_revente: json.prix_revente_estime,
-      cout_pieces: json.cout_pieces_min + '-' + json.cout_pieces_max,
+      description,
+      vendeur_nom, vendeur_tel, vendeur_url, vendeur_ville,
+      score: ai.score,
+      decision: ai.decision,
+      marge: ai.marge_estimee,
+      prix_revente: ai.prix_revente_estime,
+      cout_pieces_min: ai.cout_pieces_min,
+      cout_pieces_max: ai.cout_pieces_max,
+      temps_reparation_h: ai.temps_reparation_h,
+      panne_probable: ai.panne_probable,
+      points_positifs: ai.points_positifs,
+      points_vigilance: ai.points_vigilance,
+      conseil: ai.conseil,
       date: new Date().toLocaleDateString('fr-FR')
-    });
+    };
+    sauvegarderAnnonce(annonce);
 
   } catch (e) {
     loading.style.display = 'none';
@@ -527,16 +605,9 @@ function afficherResultat(r, titre, prix, categorie) {
   const content = document.getElementById('result-content');
 
   const scoreClass = r.score >= 70 ? 'score-hot' : r.score >= 40 ? 'score-ok' : 'score-pass';
-  const decisionClass = {
-    'ACHETER': 'decision-buy',
-    'NEGOCIER': 'decision-neg',
-    'INSPECTER': 'decision-ins',
-    'PASSER': 'decision-pass'
-  }[r.decision] || 'decision-ins';
+  const decisionClass = { 'ACHETER': 'decision-buy', 'NEGOCIER': 'decision-neg', 'INSPECTER': 'decision-ins', 'PASSER': 'decision-pass' }[r.decision] || 'decision-ins';
   const decisionIcon = { 'ACHETER': '✅', 'NEGOCIER': '🔶', 'INSPECTER': '🔵', 'PASSER': '❌' }[r.decision] || '❓';
-
   const margeClass = r.marge_estimee > 200 ? 'positive' : r.marge_estimee > 0 ? '' : 'danger';
-  const economie = Math.max(0, r.prix_revente_estime - prix - ((r.cout_pieces_min + r.cout_pieces_max) / 2));
 
   content.innerHTML = `
     <div class="decision ${decisionClass}">${decisionIcon} ${r.decision} — Score : <span class="score-badge ${scoreClass}">${r.score}/100</span></div>
@@ -547,7 +618,7 @@ function afficherResultat(r, titre, prix, categorie) {
       <div class="result-item"><span class="result-label">Pièces estimées</span><span class="result-value warning">${r.cout_pieces_min}€ – ${r.cout_pieces_max}€</span></div>
       <div class="result-item"><span class="result-label">Temps de réparation</span><span class="result-value">~${r.temps_reparation_h}h</span></div>
       <div class="result-item"><span class="result-label">Prix de revente estimé</span><span class="result-value positive">${r.prix_revente_estime}€</span></div>
-      <div class="result-item"><span class="result-label">Marge nette estimée</span><span class="result-value ${margeClass}" style="font-size:16px; font-weight:700;">${r.marge_estimee > 0 ? '+' : ''}${r.marge_estimee}€</span></div>
+      <div class="result-item"><span class="result-label">Marge nette estimée</span><span class="result-value ${margeClass}" style="font-size:16px;font-weight:700;">${r.marge_estimee > 0 ? '+' : ''}${r.marge_estimee}€</span></div>
     </div>
 
     <div class="card">
@@ -555,37 +626,31 @@ function afficherResultat(r, titre, prix, categorie) {
       <p class="analysis-text">${r.panne_probable}</p>
     </div>
 
-    ${r.points_positifs?.length ? `<div class="card">
-      <h3>Points positifs</h3>
-      ${r.points_positifs.map(p => `<div class="result-item"><span style="color:var(--green); margin-right:6px;">✓</span><span class="analysis-text">${p}</span></div>`).join('')}
-    </div>` : ''}
-
-    ${r.points_vigilance?.length ? `<div class="card">
-      <h3>Points de vigilance</h3>
-      ${r.points_vigilance.map(p => `<div class="result-item"><span style="color:var(--orange); margin-right:6px;">⚠</span><span class="analysis-text">${p}</span></div>`).join('')}
-    </div>` : ''}
+    ${r.points_positifs?.length ? `<div class="card"><h3>Points positifs</h3>${r.points_positifs.map(p => `<div class="result-item"><span style="color:var(--green);margin-right:6px;">✓</span><span class="analysis-text">${p}</span></div>`).join('')}</div>` : ''}
+    ${r.points_vigilance?.length ? `<div class="card"><h3>Points de vigilance</h3>${r.points_vigilance.map(p => `<div class="result-item"><span style="color:var(--orange);margin-right:6px;">⚠</span><span class="analysis-text">${p}</span></div>`).join('')}</div>` : ''}
 
     <div class="card">
-      <h3>Conseil de la mécano</h3>
+      <h3>Conseil</h3>
       <p class="analysis-text">${r.conseil}</p>
     </div>
 
-    <button class="btn btn-outline" style="width:100%; margin-top:4px;" onclick="resetForm()">🔄 Analyser une autre annonce</button>
+    <div style="font-size:12px; color:var(--muted); text-align:center; margin:8px 0 4px;">✅ Analyse sauvegardée dans le Tracker</div>
+    <button class="btn btn-outline" style="width:100%;" onclick="resetForm()">🔄 Analyser une autre annonce</button>
   `;
 }
 
 function resetForm() {
-  document.getElementById('titre').value = '';
-  document.getElementById('prix').value = '';
-  document.getElementById('description').value = '';
-  document.getElementById('marque').value = '';
-  document.getElementById('annee').value = '';
+  ['titre','prix','description','marque','annee','vendeur_nom','vendeur_tel','vendeur_url','vendeur_ville'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
   document.getElementById('result-zone').style.display = 'none';
   window.scrollTo(0, 0);
 }
 
 // ============ TRACKER ============
 let currentFilter = 'all';
+let modalId = null;
+
 function filtrer(f, btn) {
   currentFilter = f;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -595,21 +660,20 @@ function filtrer(f, btn) {
 
 function renderTracker() {
   const annonces = getAnnonces();
-  const list = document.getElementById('tracker-list');
 
-  // Stats
   document.getElementById('stat-total').textContent = annonces.length;
   document.getElementById('stat-pepites').textContent = annonces.filter(a => a.score >= 70).length;
   const margeTotal = annonces.reduce((s, a) => s + (a.marge || 0), 0);
-  document.getElementById('stat-marge').textContent = margeTotal > 0 ? '+' + margeTotal + '€' : margeTotal + '€';
+  document.getElementById('stat-marge').textContent = (margeTotal > 0 ? '+' : '') + margeTotal + '€';
   const economieTotal = annonces.reduce((s, a) => s + Math.max(0, (a.prix_revente || 0) - (a.prix || 0)), 0);
   document.getElementById('stat-economie').textContent = economieTotal + '€';
 
-  // Filter
   let filtered = annonces;
   if (currentFilter === 'hot') filtered = annonces.filter(a => a.score >= 70);
   else if (currentFilter === 'ok') filtered = annonces.filter(a => a.score >= 40 && a.score < 70);
   else if (currentFilter === 'pass') filtered = annonces.filter(a => a.score < 40);
+
+  const list = document.getElementById('tracker-list');
 
   if (!filtered.length) {
     list.innerHTML = `<div class="empty"><div class="empty-icon">📋</div><div>Aucune annonce ici</div></div>`;
@@ -619,20 +683,97 @@ function renderTracker() {
   list.innerHTML = filtered.map(a => {
     const tagClass = a.score >= 70 ? 'tag-hot' : a.score >= 40 ? 'tag-ok' : 'tag-pass';
     const icon = a.score >= 70 ? '🔥' : a.score >= 40 ? '🟠' : '❌';
-    return `<div class="tracker-item">
+    const margeColor = (a.marge || 0) > 0 ? 'var(--green)' : 'var(--red)';
+
+    const contactParts = [];
+    if (a.vendeur_nom) contactParts.push(`<span>👤 ${a.vendeur_nom}</span>`);
+    if (a.vendeur_tel) contactParts.push(`<span>📞 <a href="tel:${a.vendeur_tel}" onclick="event.stopPropagation()">${a.vendeur_tel}</a></span>`);
+    if (a.vendeur_ville) contactParts.push(`<span>📍 ${a.vendeur_ville}</span>`);
+    if (a.vendeur_url) contactParts.push(`<span>🔗 <a href="${a.vendeur_url}" target="_blank" onclick="event.stopPropagation()">Voir l'annonce</a></span>`);
+
+    return `<div class="tracker-item" onclick="ouvrirModal(${a.id})">
       <div class="tracker-header">
         <div class="tracker-title">${a.titre}</div>
         <span class="tag ${tagClass}">${icon} ${a.score}</span>
       </div>
       <div class="tracker-meta">
-        <span>${a.prix}€</span>
-        <span>→ ${a.prix_revente || '?'}€</span>
-        <span style="color:${(a.marge||0)>0?'var(--green)':'var(--red)'}; font-weight:600;">${(a.marge||0)>0?'+':''}${a.marge||0}€</span>
+        <span>${a.prix}€ achat</span>
+        <span>→ ${a.prix_revente || '?'}€ revente</span>
+        <span style="color:${margeColor};font-weight:600;">${(a.marge||0)>0?'+':''}${a.marge||0}€</span>
         <span>${a.decision}</span>
         <span>${a.date || ''}</span>
       </div>
+      ${contactParts.length ? `<div class="tracker-contact">${contactParts.join('')}</div>` : ''}
     </div>`;
   }).join('');
+}
+
+// ============ MODAL ============
+function ouvrirModal(id) {
+  const annonces = getAnnonces();
+  const a = annonces.find(x => x.id === id);
+  if (!a) return;
+
+  modalId = id;
+  document.getElementById('modal-title').textContent = a.titre;
+
+  const scoreClass = a.score >= 70 ? 'score-hot' : a.score >= 40 ? 'score-ok' : 'score-pass';
+  const decisionClass = { 'ACHETER': 'decision-buy', 'NEGOCIER': 'decision-neg', 'INSPECTER': 'decision-ins', 'PASSER': 'decision-pass' }[a.decision] || 'decision-ins';
+  const decisionIcon = { 'ACHETER': '✅', 'NEGOCIER': '🔶', 'INSPECTER': '🔵', 'PASSER': '❌' }[a.decision] || '❓';
+  const margeClass = (a.marge || 0) > 200 ? 'positive' : (a.marge || 0) > 0 ? '' : 'danger';
+
+  // Contact block
+  const hasContact = a.vendeur_nom || a.vendeur_tel || a.vendeur_url || a.vendeur_ville;
+  const contactHtml = hasContact ? `
+    <div class="contact-block">
+      <h3>📞 Contact vendeur</h3>
+      ${a.vendeur_nom ? `<div class="contact-row"><span>👤 Nom</span><span>${a.vendeur_nom}</span></div>` : ''}
+      ${a.vendeur_tel ? `<div class="contact-row"><span>📞 Tél</span><a href="tel:${a.vendeur_tel}">${a.vendeur_tel}</a></div>` : ''}
+      ${a.vendeur_ville ? `<div class="contact-row"><span>📍 Lieu</span><span>${a.vendeur_ville}</span></div>` : ''}
+      ${a.vendeur_url ? `<div class="contact-row"><span>🔗 Annonce</span><a href="${a.vendeur_url}" target="_blank">Ouvrir Leboncoin</a></div>` : ''}
+    </div>` : `<div style="font-size:13px;color:var(--muted);margin-bottom:12px;">Aucune coordonnée vendeur enregistrée.</div>`;
+
+  document.getElementById('modal-body').innerHTML = `
+    <div class="decision ${decisionClass}" style="margin-bottom:12px;">${decisionIcon} ${a.decision} — Score : <span class="score-badge ${scoreClass}">${a.score}/100</span></div>
+
+    ${contactHtml}
+
+    <div class="card">
+      <h3>Diagnostic financier</h3>
+      <div class="result-item"><span class="result-label">Prix d'achat</span><span class="result-value">${a.prix}€</span></div>
+      <div class="result-item"><span class="result-label">Pièces estimées</span><span class="result-value warning">${a.cout_pieces_min || '?'}€ – ${a.cout_pieces_max || '?'}€</span></div>
+      <div class="result-item"><span class="result-label">Temps réparation</span><span class="result-value">~${a.temps_reparation_h || '?'}h</span></div>
+      <div class="result-item"><span class="result-label">Prix revente estimé</span><span class="result-value positive">${a.prix_revente || '?'}€</span></div>
+      <div class="result-item"><span class="result-label">Marge nette estimée</span><span class="result-value ${margeClass}" style="font-size:16px;font-weight:700;">${(a.marge||0)>0?'+':''}${a.marge||0}€</span></div>
+    </div>
+
+    ${a.panne_probable ? `<div class="card"><h3>Diagnostic panne</h3><p class="analysis-text">${a.panne_probable}</p></div>` : ''}
+    ${a.points_positifs?.length ? `<div class="card"><h3>Points positifs</h3>${a.points_positifs.map(p => `<div class="result-item"><span style="color:var(--green);margin-right:6px;">✓</span><span class="analysis-text">${p}</span></div>`).join('')}</div>` : ''}
+    ${a.points_vigilance?.length ? `<div class="card"><h3>Points de vigilance</h3>${a.points_vigilance.map(p => `<div class="result-item"><span style="color:var(--orange);margin-right:6px;">⚠</span><span class="analysis-text">${p}</span></div>`).join('')}</div>` : ''}
+    ${a.conseil ? `<div class="card"><h3>Conseil</h3><p class="analysis-text">${a.conseil}</p></div>` : ''}
+
+    <div style="font-size:12px;color:var(--muted);text-align:center;margin-top:4px;">Analysé le ${a.date || ''} · ${a.marque || ''} ${a.annee || ''}</div>
+  `;
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function fermerModal(e) {
+  if (e && e.target !== document.getElementById('modal-overlay')) return;
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  modalId = null;
+}
+
+function supprimerDepuisModal() {
+  if (!modalId) return;
+  if (!confirm('Supprimer cette annonce du tracker ?')) return;
+  supprimerAnnonce(modalId);
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  modalId = null;
+  renderTracker();
 }
 
 // ============ INIT ============
