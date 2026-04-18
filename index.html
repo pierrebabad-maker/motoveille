@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MotoVeille - Chasseur d'Affaires Motoculture</title>
+<style>
+  :root {
+    --green: #22c55e;
+    --orange: #f97316;
+    --red: #ef4444;
+    --blue: #3b82f6;
+    --bg: #0f172a;
+    --card: #1e293b;
+    --border: #334155;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; min-height: 100vh; }
+
+  /* Header */
+  header { background: var(--card); border-bottom: 1px solid var(--border); padding: 12px 16px; display: flex; align-items: center; gap: 10px; position: sticky; top: 0; z-index: 10; }
+  header h1 { font-size: 18px; font-weight: 700; }
+  header span { font-size: 22px; }
+  .version { font-size: 11px; color: var(--muted); margin-left: auto; }
+
+  /* Tabs */
+  .tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); overflow-x: auto; }
+  .tab { flex: 1; padding: 12px 8px; text-align: center; font-size: 13px; font-weight: 500; cursor: pointer; border-bottom: 2px solid transparent; color: var(--muted); white-space: nowrap; transition: all .2s; min-width: 80px; }
+  .tab.active { color: var(--green); border-bottom-color: var(--green); }
+
+  /* Pages */
+  .page { display: none; padding: 16px; max-width: 600px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  /* Cards */
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+  .card h3 { font-size: 14px; color: var(--muted); margin-bottom: 12px; text-transform: uppercase; letter-spacing: .05em; }
+
+  /* Form */
+  label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 4px; margin-top: 12px; }
+  label:first-child { margin-top: 0; }
+  input, textarea, select {
+    width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+    color: var(--text); padding: 10px 12px; font-size: 14px; outline: none; font-family: inherit;
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--green); }
+  textarea { resize: vertical; min-height: 80px; }
+
+  /* Buttons */
+  .btn { display: block; width: 100%; padding: 13px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; transition: all .2s; text-align: center; }
+  .btn-green { background: var(--green); color: #0f172a; }
+  .btn-green:hover { filter: brightness(1.1); }
+  .btn-green:disabled { opacity: .5; cursor: not-allowed; }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); font-size: 13px; padding: 8px 14px; display: inline-block; width: auto; }
+  .btn-red { background: #450a0a; color: #fca5a5; font-size: 13px; padding: 8px 14px; display: inline-block; width: auto; }
+
+  /* Score badge */
+  .score-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 16px; }
+  .score-hot { background: #14532d; color: var(--green); }
+  .score-ok { background: #431407; color: var(--orange); }
+  .score-pass { background: #450a0a; color: var(--red); }
+
+  /* Decision banner */
+  .decision { border-radius: 10px; padding: 12px 16px; margin-bottom: 12px; font-size: 15px; font-weight: 600; }
+  .decision-buy { background: #14532d; color: #86efac; border: 1px solid #16a34a; }
+  .decision-neg { background: #431407; color: #fdba74; border: 1px solid #ea580c; }
+  .decision-ins { background: #1e3a5f; color: #93c5fd; border: 1px solid #2563eb; }
+  .decision-pass { background: #450a0a; color: #fca5a5; border: 1px solid #dc2626; }
+
+  /* Result sections */
+  .result-item { display: flex; justify-content: space-between; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px; gap: 12px; }
+  .result-item:last-child { border-bottom: none; }
+  .result-label { color: var(--muted); flex-shrink: 0; }
+  .result-value { font-weight: 500; text-align: right; }
+  .result-value.positive { color: var(--green); }
+  .result-value.warning { color: var(--orange); }
+  .result-value.danger { color: var(--red); }
+
+  /* Analysis text */
+  .analysis-text { font-size: 13px; line-height: 1.6; color: #cbd5e1; }
+
+  /* Tracker items */
+  .tracker-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-bottom: 8px; }
+  .tracker-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .tracker-title { font-size: 14px; font-weight: 600; flex: 1; margin-right: 8px; }
+  .tracker-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+  .tag { padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+  .tag-hot { background: #14532d; color: var(--green); }
+  .tag-ok { background: #431407; color: var(--orange); }
+  .tag-pass { background: #450a0a; color: var(--red); }
+
+  /* Stats */
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px; text-align: center; }
+  .stat-value { font-size: 22px; font-weight: 700; color: var(--green); }
+  .stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* Market table */
+  .market-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .market-table th { text-align: left; padding: 8px; color: var(--muted); font-weight: 500; border-bottom: 1px solid var(--border); }
+  .market-table td { padding: 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .market-table tr:last-child td { border-bottom: none; }
+  .price-green { color: var(--green); font-weight: 600; }
+  .price-orange { color: var(--orange); font-weight: 600; }
+
+  /* API key section */
+  .api-info { background: #1e3a5f; border: 1px solid #2563eb; border-radius: 10px; padding: 12px; margin-bottom: 16px; font-size: 13px; color: #93c5fd; line-height: 1.5; }
+  .api-info a { color: #60a5fa; }
+
+  /* Loading */
+  .loading { text-align: center; padding: 20px; color: var(--muted); }
+  .spinner { width: 30px; height: 30px; border: 3px solid var(--border); border-top-color: var(--green); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 10px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Empty state */
+  .empty { text-align: center; padding: 40px 20px; color: var(--muted); }
+  .empty-icon { font-size: 40px; margin-bottom: 10px; }
+
+  /* Filter buttons */
+  .filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .filter-btn { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--muted); }
+  .filter-btn.active { background: var(--green); color: #0f172a; border-color: var(--green); }
+
+  /* Tips */
+  .tip { background: #1c1917; border-left: 3px solid var(--orange); padding: 10px 12px; border-radius: 0 8px 8px 0; margin-bottom: 10px; font-size: 13px; color: #d6d3d1; line-height: 1.5; }
+  .tip strong { color: var(--orange); }
+
+  /* Settings */
+  .key-status { display: flex; align-items: center; gap: 6px; font-size: 13px; margin-top: 8px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-green { background: var(--green); }
+  .dot-red { background: var(--red); }
+</style>
+</head>
+<body>
+
+<header>
+  <span>🔧</span>
+  <h1>MotoVeille</h1>
+  <div class="version">Chasseur d'affaires</div>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="showPage('scanner')">🔍 Scanner</div>
+  <div class="tab" onclick="showPage('tracker')">📋 Tracker</div>
+  <div class="tab" onclick="showPage('marche')">💰 Marché</div>
+  <div class="tab" onclick="showPage('config')">⚙️ Config</div>
+</div>
+
+<!-- SCANNER -->
+<div id="page-scanner" class="page active">
+  <div class="tip">
+    <strong>Astuce :</strong> Cherche sur Leboncoin avec "ne démarre plus", "en panne", "pour pièces", "à réparer". Les meilleures affaires sont dans ces annonces !
+  </div>
+
+  <div class="card">
+    <h3>Infos de l'annonce</h3>
+    <label>Titre de l'annonce *</label>
+    <input id="titre" type="text" placeholder="ex: Tondeuse autoportée Husqvarna ne démarre plus">
+
+    <label>Prix demandé (€) *</label>
+    <input id="prix" type="number" placeholder="ex: 150">
+
+    <label>Catégorie</label>
+    <select id="categorie">
+      <option value="tondeuse_autoportee">Tondeuse autoportée / Tracteur tondeuse</option>
+      <option value="tondeuse_poussee">Tondeuse poussée</option>
+      <option value="robot_tondeur">Robot tondeuse</option>
+      <option value="tronconneuse">Tronçonneuse</option>
+      <option value="debroussailleuse">Débroussailleuse / Coupe-bordures</option>
+      <option value="motoculteur">Motoculteur / Motobineuse</option>
+      <option value="souffleur">Souffleur / Aspirateur feuilles</option>
+      <option value="scarificateur">Scarificateur</option>
+      <option value="autre">Autre matériel</option>
+    </select>
+
+    <label>Description de la panne (copie le texte de l'annonce)</label>
+    <textarea id="description" placeholder="ex: Moteur tourne mais ne démarre pas à froid, courroie à changer, plateau de coupe à vérifier..."></textarea>
+
+    <label>Marque / Modèle (optionnel)</label>
+    <input id="marque" type="text" placeholder="ex: Husqvarna 115B, Stihl MS 180...">
+
+    <label>Année estimée (optionnel)</label>
+    <input id="annee" type="number" placeholder="ex: 2018">
+  </div>
+
+  <button class="btn btn-green" id="btn-analyse" onclick="analyser()">🤖 Analyser cette annonce</button>
+
+  <div id="result-zone" style="display:none; margin-top:16px;">
+    <div id="result-loading" class="loading" style="display:none;">
+      <div class="spinner"></div>
+      <div>Analyse IA en cours...</div>
+    </div>
+    <div id="result-content"></div>
+  </div>
+</div>
+
+<!-- TRACKER -->
+<div id="page-tracker" class="page">
+  <div class="stats-grid" id="stats-zone">
+    <div class="stat-card"><div class="stat-value" id="stat-total">0</div><div class="stat-label">Annonces analysées</div></div>
+    <div class="stat-card"><div class="stat-value" id="stat-pepites">0</div><div class="stat-label">Pépites 🔥 (score ≥70)</div></div>
+    <div class="stat-card"><div class="stat-value" id="stat-marge">0€</div><div class="stat-label">Marge cumulée estimée</div></div>
+    <div class="stat-card"><div class="stat-value" id="stat-economie">0€</div><div class="stat-label">Économies potentielles</div></div>
+  </div>
+
+  <div class="filters">
+    <button class="filter-btn active" onclick="filtrer('all', this)">Tout</button>
+    <button class="filter-btn" onclick="filtrer('hot', this)">🔥 Pépites</button>
+    <button class="filter-btn" onclick="filtrer('ok', this)">🟠 À négocier</button>
+    <button class="filter-btn" onclick="filtrer('pass', this)">❌ À passer</button>
+  </div>
+
+  <div id="tracker-list"></div>
+</div>
+
+<!-- MARCHE -->
+<div id="page-marche" class="page">
+  <div class="tip">
+    <strong>Objectif :</strong> Acheter HS entre 10-30% du prix fonctionnel, revendre à 60-80% après réparation. Marge cible : 40-60% du prix de vente.
+  </div>
+
+  <div class="card">
+    <h3>Tondeuses autoportées / Tracteurs tondeuses</h3>
+    <table class="market-table">
+      <tr><th>État</th><th>Fourchette prix</th></tr>
+      <tr><td>Fonctionnel, entretenu</td><td class="price-green">500€ - 2500€</td></tr>
+      <tr><td>Fonctionnel, à entretenir</td><td class="price-orange">250€ - 800€</td></tr>
+      <tr><td>En panne (réparable)</td><td>80€ - 300€</td></tr>
+      <tr><td><strong>Prix cible achat max</strong></td><td><strong>150€ - 250€</strong></td></tr>
+      <tr><td>Pannes faciles ✅</td><td>Carbu, courroie, plateau, batterie, bougies</td></tr>
+      <tr><td>Pièges ❌</td><td>Moteur grippé, boîte de vitesse HS, cadre tordu</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Tondeuses poussées</h3>
+    <table class="market-table">
+      <tr><th>État</th><th>Fourchette prix</th></tr>
+      <tr><td>Fonctionnel, entretenu</td><td class="price-green">80€ - 350€</td></tr>
+      <tr><td>En panne (réparable)</td><td>15€ - 60€</td></tr>
+      <tr><td><strong>Prix cible achat max</strong></td><td><strong>20€ - 50€</strong></td></tr>
+      <tr><td>Pannes faciles ✅</td><td>Carbu encrassé, bobine allumage, lanceur, lame</td></tr>
+      <tr><td>Pièges ❌</td><td>Embiellage HS, bielle tordue, arbre manivelle</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Robots tondeuses</h3>
+    <table class="market-table">
+      <tr><th>État</th><th>Fourchette prix</th></tr>
+      <tr><td>Fonctionnel, entretenu</td><td class="price-green">200€ - 1800€</td></tr>
+      <tr><td>En panne (réparable)</td><td>50€ - 300€</td></tr>
+      <tr><td><strong>Prix cible achat max</strong></td><td><strong>80€ - 200€</strong></td></tr>
+      <tr><td>Pannes faciles ✅</td><td>Batterie morte, lames, capteurs de pluie, câble périmètre</td></tr>
+      <tr><td>Pièges ❌</td><td>Carte mère HS, moteurs de roues grillés, modèle obsolète sans pièces</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Tronçonneuses</h3>
+    <table class="market-table">
+      <tr><th>État</th><th>Fourchette prix</th></tr>
+      <tr><td>Fonctionnel, entretenu</td><td class="price-green">80€ - 500€</td></tr>
+      <tr><td>En panne (réparable)</td><td>20€ - 80€</td></tr>
+      <tr><td><strong>Prix cible achat max</strong></td><td><strong>25€ - 60€</strong></td></tr>
+      <tr><td>Pannes faciles ✅</td><td>Carbu, filtre à air, bougie, guide + chaîne, pompe à huile</td></tr>
+      <tr><td>Pièges ❌</td><td>Carter fissuré, vilebrequin HS, membrane carbu introuvable</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Débroussailleuses / Motoculteurs</h3>
+    <table class="market-table">
+      <tr><th>État</th><th>Fourchette prix</th></tr>
+      <tr><td>Débroussailleuse fonctionnelle</td><td class="price-green">50€ - 400€</td></tr>
+      <tr><td>Débroussailleuse en panne</td><td>10€ - 40€</td></tr>
+      <tr><td>Motoculteur fonctionnel</td><td class="price-green">150€ - 800€</td></tr>
+      <tr><td>Motoculteur en panne</td><td>50€ - 150€</td></tr>
+      <tr><td>Pannes faciles ✅</td><td>Carbu, filtre, courroies, embrayage centrifuge</td></tr>
+      <tr><td>Pièges ❌</td><td>Boîte de fraises cassée, arbre de transmission tordu</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>Mots-clés gagnants sur Leboncoin</h3>
+    <div style="font-size:14px; line-height:2;">
+      <div>🔎 <strong>"ne démarre plus"</strong> — souvent juste carbu ou bougie</div>
+      <div>🔎 <strong>"pour pièces"</strong> — peut être réparable entièrement</div>
+      <div>🔎 <strong>"à réparer"</strong> — vendeur honnête, bonne base de négociation</div>
+      <div>🔎 <strong>"courroie cassée"</strong> — pièce à 10-30€, machine à 100-200€</div>
+      <div>🔎 <strong>"batterie morte"</strong> — robots / autoportées : batterie 30-80€</div>
+      <div>🔎 <strong>"carburateur"</strong> — nettoyage ou remplacement : 5-25€</div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIG -->
+<div id="page-config" class="page">
+  <div class="api-info">
+    <strong>🔑 Clé API Anthropic requise</strong><br><br>
+    L'analyse IA utilise Claude (Anthropic). La clé est gratuite pour commencer :<br>
+    1. Va sur <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a><br>
+    2. Crée un compte gratuit<br>
+    3. "API Keys" → "Create Key"<br>
+    4. Colle la clé ci-dessous<br><br>
+    <em>Ta clé est stockée uniquement sur ton téléphone (localStorage), elle ne transite jamais par un serveur.</em>
+  </div>
+
+  <div class="card">
+    <h3>Clé API Anthropic</h3>
+    <label>Ta clé API (commence par sk-ant-...)</label>
+    <input id="api-key-input" type="password" placeholder="sk-ant-api03-...">
+    <div class="key-status" id="key-status">
+      <div class="dot dot-red"></div>
+      <span>Aucune clé configurée</span>
+    </div>
+    <div style="margin-top: 12px; display: flex; gap: 8px;">
+      <button class="btn btn-green" style="flex:1" onclick="sauvegarderCle()">Sauvegarder</button>
+      <button class="btn btn-outline" onclick="effacerCle()">Effacer</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Données</h3>
+    <p style="font-size:13px; color:var(--muted); margin-bottom:12px;" id="data-info">Chargement...</p>
+    <button class="btn btn-red" onclick="effacerDonnees()">🗑️ Effacer tout le tracker</button>
+  </div>
+
+  <div class="card">
+    <h3>À propos</h3>
+    <p style="font-size:13px; color:var(--muted); line-height:1.6;">
+      MotoVeille aide à identifier les bonnes affaires en motoculture sur Leboncoin.<br><br>
+      Conçu pour des mécaniciens qui remettent en état et revendent le matériel.<br><br>
+      <em>Version 1.0 — Made with ❤️ pour les pros de la motoculture</em>
+    </p>
+  </div>
+</div>
+
+<script>
+// ============ NAVIGATION ============
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  event.target.classList.add('active');
+  if (id === 'tracker') renderTracker();
+  if (id === 'config') initConfig();
+}
+
+// ============ API KEY ============
+function getApiKey() { return localStorage.getItem('mv_api_key') || ''; }
+function sauvegarderCle() {
+  const k = document.getElementById('api-key-input').value.trim();
+  if (!k.startsWith('sk-ant-')) { alert('La clé doit commencer par sk-ant-'); return; }
+  localStorage.setItem('mv_api_key', k);
+  updateKeyStatus();
+  alert('Clé sauvegardée ! Tu peux maintenant analyser des annonces.');
+}
+function effacerCle() {
+  localStorage.removeItem('mv_api_key');
+  document.getElementById('api-key-input').value = '';
+  updateKeyStatus();
+}
+function updateKeyStatus() {
+  const k = getApiKey();
+  const el = document.getElementById('key-status');
+  if (k) {
+    el.innerHTML = '<div class="dot dot-green"></div><span>Clé configurée (' + k.slice(0,12) + '...)</span>';
+  } else {
+    el.innerHTML = '<div class="dot dot-red"></div><span>Aucune clé configurée</span>';
+  }
+}
+function initConfig() {
+  updateKeyStatus();
+  const annonces = getAnnonces();
+  document.getElementById('data-info').textContent = annonces.length + ' annonce(s) sauvegardée(s) dans le tracker.';
+}
+
+// ============ ANNONCES (localStorage) ============
+function getAnnonces() {
+  try { return JSON.parse(localStorage.getItem('mv_annonces') || '[]'); } catch { return []; }
+}
+function sauvegarderAnnonce(a) {
+  const annonces = getAnnonces();
+  annonces.unshift(a);
+  localStorage.setItem('mv_annonces', JSON.stringify(annonces.slice(0, 200)));
+}
+function effacerDonnees() {
+  if (confirm('Effacer tout le tracker ? Cette action est irréversible.')) {
+    localStorage.removeItem('mv_annonces');
+    renderTracker();
+    alert('Tracker vidé.');
+  }
+}
+
+// ============ ANALYSE IA ============
+async function analyser() {
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    alert('Configure ta clé API Anthropic dans l\'onglet ⚙️ Config d\'abord !');
+    showPage('config');
+    return;
+  }
+
+  const titre = document.getElementById('titre').value.trim();
+  const prix = parseFloat(document.getElementById('prix').value);
+  const categorie = document.getElementById('categorie').value;
+  const description = document.getElementById('description').value.trim();
+  const marque = document.getElementById('marque').value.trim();
+  const annee = document.getElementById('annee').value.trim();
+
+  if (!titre || !prix) { alert('Remplis au moins le titre et le prix.'); return; }
+
+  const btn = document.getElementById('btn-analyse');
+  btn.disabled = true;
+
+  const resultZone = document.getElementById('result-zone');
+  const loading = document.getElementById('result-loading');
+  const content = document.getElementById('result-content');
+  resultZone.style.display = 'block';
+  loading.style.display = 'block';
+  content.innerHTML = '';
+
+  const categorieLabels = {
+    tondeuse_autoportee: 'Tondeuse autoportée / Tracteur tondeuse',
+    tondeuse_poussee: 'Tondeuse poussée',
+    robot_tondeur: 'Robot tondeuse',
+    tronconneuse: 'Tronçonneuse',
+    debroussailleuse: 'Débroussailleuse / Coupe-bordures',
+    motoculteur: 'Motoculteur / Motobineuse',
+    souffleur: 'Souffleur / Aspirateur feuilles',
+    scarificateur: 'Scarificateur',
+    autre: 'Autre matériel motoculture'
+  };
+
+  const prompt = `Tu es expert en motoculture et en achat-revente de matériel d'occasion.
+
+Analyse cette annonce Leboncoin pour une jeune mécanicienne en bac pro motoculture qui cherche du matériel HS à réparer et revendre :
+
+ANNONCE:
+- Titre: ${titre}
+- Catégorie: ${categorieLabels[categorie]}
+- Prix demandé: ${prix}€
+- Marque/Modèle: ${marque || 'Non précisé'}
+- Année: ${annee || 'Non précisée'}
+- Description: ${description || 'Aucune description fournie'}
+
+Réponds en JSON strictement dans ce format (sans markdown, sans backticks) :
+{
+  "score": <nombre entre 0 et 100>,
+  "decision": <"ACHETER" | "NEGOCIER" | "INSPECTER" | "PASSER">,
+  "panne_probable": "<diagnostic de la panne probable en 1-2 phrases>",
+  "cout_pieces_min": <nombre en euros>,
+  "cout_pieces_max": <nombre en euros>,
+  "temps_reparation_h": <nombre d'heures estimé>,
+  "prix_revente_estime": <nombre en euros>,
+  "marge_estimee": <nombre en euros (prix revente - prix achat - coût pièces)>,
+  "points_positifs": ["<point 1>", "<point 2>"],
+  "points_vigilance": ["<point 1>", "<point 2>"],
+  "conseil": "<conseil pratique en 2-3 phrases pour cette annonce spécifique>"
+}
+
+Critères de score:
+- 80-100: Excellente affaire, panne simple, bonne marge → ACHETER
+- 60-79: Bonne opportunité mais négocier → NEGOCIER
+- 40-59: À voir de près, risques modérés → INSPECTER
+- 0-39: Trop risqué ou pas assez rentable → PASSER`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 800,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.error?.message || 'Erreur API ' + response.status);
+    }
+
+    const data = await response.json();
+    const raw = data.content[0].text.trim();
+    const json = JSON.parse(raw);
+
+    loading.style.display = 'none';
+    afficherResultat(json, titre, prix, categorie);
+
+    // Sauvegarder dans tracker
+    sauvegarderAnnonce({
+      id: Date.now(),
+      titre, prix, categorie, marque, annee,
+      score: json.score,
+      decision: json.decision,
+      marge: json.marge_estimee,
+      prix_revente: json.prix_revente_estime,
+      cout_pieces: json.cout_pieces_min + '-' + json.cout_pieces_max,
+      date: new Date().toLocaleDateString('fr-FR')
+    });
+
+  } catch (e) {
+    loading.style.display = 'none';
+    content.innerHTML = `<div class="card" style="border-color:#dc2626;">
+      <div style="color:#fca5a5; font-weight:600; margin-bottom:8px;">❌ Erreur d'analyse</div>
+      <div style="color:var(--muted); font-size:13px;">${e.message}</div>
+      <div style="color:var(--muted); font-size:12px; margin-top:8px;">Vérifie ta clé API dans l'onglet ⚙️ Config.</div>
+    </div>`;
+  }
+
+  btn.disabled = false;
+}
+
+function afficherResultat(r, titre, prix, categorie) {
+  const content = document.getElementById('result-content');
+
+  const scoreClass = r.score >= 70 ? 'score-hot' : r.score >= 40 ? 'score-ok' : 'score-pass';
+  const decisionClass = {
+    'ACHETER': 'decision-buy',
+    'NEGOCIER': 'decision-neg',
+    'INSPECTER': 'decision-ins',
+    'PASSER': 'decision-pass'
+  }[r.decision] || 'decision-ins';
+  const decisionIcon = { 'ACHETER': '✅', 'NEGOCIER': '🔶', 'INSPECTER': '🔵', 'PASSER': '❌' }[r.decision] || '❓';
+
+  const margeClass = r.marge_estimee > 200 ? 'positive' : r.marge_estimee > 0 ? '' : 'danger';
+  const economie = Math.max(0, r.prix_revente_estime - prix - ((r.cout_pieces_min + r.cout_pieces_max) / 2));
+
+  content.innerHTML = `
+    <div class="decision ${decisionClass}">${decisionIcon} ${r.decision} — Score : <span class="score-badge ${scoreClass}">${r.score}/100</span></div>
+
+    <div class="card">
+      <h3>Diagnostic financier</h3>
+      <div class="result-item"><span class="result-label">Prix d'achat</span><span class="result-value">${prix}€</span></div>
+      <div class="result-item"><span class="result-label">Pièces estimées</span><span class="result-value warning">${r.cout_pieces_min}€ – ${r.cout_pieces_max}€</span></div>
+      <div class="result-item"><span class="result-label">Temps de réparation</span><span class="result-value">~${r.temps_reparation_h}h</span></div>
+      <div class="result-item"><span class="result-label">Prix de revente estimé</span><span class="result-value positive">${r.prix_revente_estime}€</span></div>
+      <div class="result-item"><span class="result-label">Marge nette estimée</span><span class="result-value ${margeClass}" style="font-size:16px; font-weight:700;">${r.marge_estimee > 0 ? '+' : ''}${r.marge_estimee}€</span></div>
+    </div>
+
+    <div class="card">
+      <h3>Diagnostic panne</h3>
+      <p class="analysis-text">${r.panne_probable}</p>
+    </div>
+
+    ${r.points_positifs?.length ? `<div class="card">
+      <h3>Points positifs</h3>
+      ${r.points_positifs.map(p => `<div class="result-item"><span style="color:var(--green); margin-right:6px;">✓</span><span class="analysis-text">${p}</span></div>`).join('')}
+    </div>` : ''}
+
+    ${r.points_vigilance?.length ? `<div class="card">
+      <h3>Points de vigilance</h3>
+      ${r.points_vigilance.map(p => `<div class="result-item"><span style="color:var(--orange); margin-right:6px;">⚠</span><span class="analysis-text">${p}</span></div>`).join('')}
+    </div>` : ''}
+
+    <div class="card">
+      <h3>Conseil de la mécano</h3>
+      <p class="analysis-text">${r.conseil}</p>
+    </div>
+
+    <button class="btn btn-outline" style="width:100%; margin-top:4px;" onclick="resetForm()">🔄 Analyser une autre annonce</button>
+  `;
+}
+
+function resetForm() {
+  document.getElementById('titre').value = '';
+  document.getElementById('prix').value = '';
+  document.getElementById('description').value = '';
+  document.getElementById('marque').value = '';
+  document.getElementById('annee').value = '';
+  document.getElementById('result-zone').style.display = 'none';
+  window.scrollTo(0, 0);
+}
+
+// ============ TRACKER ============
+let currentFilter = 'all';
+function filtrer(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTracker();
+}
+
+function renderTracker() {
+  const annonces = getAnnonces();
+  const list = document.getElementById('tracker-list');
+
+  // Stats
+  document.getElementById('stat-total').textContent = annonces.length;
+  document.getElementById('stat-pepites').textContent = annonces.filter(a => a.score >= 70).length;
+  const margeTotal = annonces.reduce((s, a) => s + (a.marge || 0), 0);
+  document.getElementById('stat-marge').textContent = margeTotal > 0 ? '+' + margeTotal + '€' : margeTotal + '€';
+  const economieTotal = annonces.reduce((s, a) => s + Math.max(0, (a.prix_revente || 0) - (a.prix || 0)), 0);
+  document.getElementById('stat-economie').textContent = economieTotal + '€';
+
+  // Filter
+  let filtered = annonces;
+  if (currentFilter === 'hot') filtered = annonces.filter(a => a.score >= 70);
+  else if (currentFilter === 'ok') filtered = annonces.filter(a => a.score >= 40 && a.score < 70);
+  else if (currentFilter === 'pass') filtered = annonces.filter(a => a.score < 40);
+
+  if (!filtered.length) {
+    list.innerHTML = `<div class="empty"><div class="empty-icon">📋</div><div>Aucune annonce ici</div></div>`;
+    return;
+  }
+
+  list.innerHTML = filtered.map(a => {
+    const tagClass = a.score >= 70 ? 'tag-hot' : a.score >= 40 ? 'tag-ok' : 'tag-pass';
+    const icon = a.score >= 70 ? '🔥' : a.score >= 40 ? '🟠' : '❌';
+    return `<div class="tracker-item">
+      <div class="tracker-header">
+        <div class="tracker-title">${a.titre}</div>
+        <span class="tag ${tagClass}">${icon} ${a.score}</span>
+      </div>
+      <div class="tracker-meta">
+        <span>${a.prix}€</span>
+        <span>→ ${a.prix_revente || '?'}€</span>
+        <span style="color:${(a.marge||0)>0?'var(--green)':'var(--red)'}; font-weight:600;">${(a.marge||0)>0?'+':''}${a.marge||0}€</span>
+        <span>${a.decision}</span>
+        <span>${a.date || ''}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ============ INIT ============
+document.addEventListener('DOMContentLoaded', () => {
+  const k = getApiKey();
+  if (k) document.getElementById('api-key-input').value = k;
+  updateKeyStatus();
+});
+</script>
+</body>
+</html>
