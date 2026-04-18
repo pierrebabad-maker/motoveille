@@ -491,7 +491,9 @@ Critères de score:
     }
 
     const data = await response.json();
-    const raw = data.content[0].text.trim();
+    let raw = data.content[0].text.trim();
+    // Strip markdown code blocks if present (```json ... ``` or ``` ... ```)
+    raw = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
     const json = JSON.parse(raw);
 
     loading.style.display = 'none';
